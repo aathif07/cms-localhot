@@ -33,7 +33,6 @@
     "@blocknote/server-util": "^0.47.1",
     "@clickhouse/client": "^1.18.1",
     "@dagrejs/dagre": "^1.1.2",
-    "@e2b/code-interpreter": "^1.0.4",
     "@envelop/core": "4.0.3",
     "@envelop/on-resolve": "4.1.0",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
@@ -186,6 +185,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@e2b/code-interpreter": "^1.0.4",
     "@faker-js/faker": "^9.8.0",
     "@lingui/cli": "^5.1.2",
     "@nestjs/cli": "^11.0.16",
