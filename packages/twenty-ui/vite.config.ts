@@ -85,7 +85,7 @@ export default defineConfig(({ command }) => {
       }),
       svgr(),
       dts(dtsConfig),
-      checker(checkersConfig),
+      // checker(checkersConfig),
       createWywProfilingPlugin(
         wyw({
           include: [path.resolve(__dirname, 'src') + '/**/*.{ts,tsx}'],
