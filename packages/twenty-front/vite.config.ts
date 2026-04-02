@@ -54,15 +54,15 @@ export default defineConfig(({ mode }) => {
       ...(VITE_HOST ? { host: VITE_HOST } : {}),
       ...(SSL_KEY_PATH && SSL_CERT_PATH
         ? {
-            protocol: 'https',
-            https: {
-              key: fs.readFileSync(env.SSL_KEY_PATH),
-              cert: fs.readFileSync(env.SSL_CERT_PATH),
-            },
-          }
+          protocol: 'https',
+          https: {
+            key: fs.readFileSync(env.SSL_KEY_PATH),
+            cert: fs.readFileSync(env.SSL_CERT_PATH),
+          },
+        }
         : {
-            protocol: 'http',
-          }),
+          protocol: 'http',
+        }),
       fs: {
         allow: [
           searchForWorkspaceRoot(process.cwd()),
@@ -122,13 +122,13 @@ export default defineConfig(({ mode }) => {
       ),
       ...(env.ANALYZE === 'true'
         ? [
-            visualizer({
-              open: !process.env.CI,
-              gzipSize: true,
-              brotliSize: true,
-              filename: 'dist/stats.html',
-            }) as PluginOption,
-          ]
+          visualizer({
+            open: !process.env.CI,
+            gzipSize: true,
+            brotliSize: true,
+            filename: 'dist/stats.html',
+          }) as PluginOption,
+        ]
         : []),
     ],
 
