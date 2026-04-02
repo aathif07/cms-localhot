@@ -1,26 +1,77 @@
-version: "3.9"
+name: cms-dashboard
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: twenty-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: twenty
-    ports:
-      - "5432:5432"
+  server:
+    image: twentycrm/twenty:latest
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - server-local-data:/app/packages/twenty-server/.local-storage
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_PORT: 3000
+      PG_DATABASE_URL: postgres://postgres:aathifcrm2026@db:5432/cms-dashboard
+      SERVER_URL: https://crmaathif.welocalhost.com
+      REDIS_URL: redis://redis:6379
+      APP_SECRET: R8U2qGjE4lRcoKpWsGoapEpgKR4If0Yrq5J2mIEeuoQ=
+      SIGN_IN_PREFILLED: "false"
+      STORAGE_TYPE: local
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthz
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: always
+
+  worker:
+    image: twentycrm/twenty:latest
+    volumes:
+      - server-local-data:/app/packages/twenty-server/.local-storage
+    command: ["yarn", "worker:prod"]
+    environment:
+      PG_DATABASE_URL: postgres://postgres:aathifcrm2026@db:5432/cms-dashboard
+      SERVER_URL: https://crmaathif.welocalhost.com
+      REDIS_URL: redis://redis:6379
+      DISABLE_DB_MIGRATIONS: "true"
+      DISABLE_CRON_JOBS_REGISTRATION: "true"
+      APP_SECRET: R8U2qGjE4lRcoKpWsGoapEpgKR4If0Yrq5J2mIEeuoQ=
+      STORAGE_TYPE: local
+    depends_on:
+      db:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    restart: always
+
+  db:
+    image: postgres:16
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: cms-dashboard
+      POSTGRES_PASSWORD: aathifcrm2026
+      POSTGRES_USER: postgres
+    healthcheck:
+      test: pg_isready -U postgres -h localhost -d postgres
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
 
   redis:
     image: redis:7
-    container_name: twenty-redis
     restart: always
-    ports:
-      - "6379:6379"
+    command: ["--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
-  pgdata:
-  
+  db-data:
+  server-local-data:
