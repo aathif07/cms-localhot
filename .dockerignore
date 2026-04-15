@@ -3,3 +3,23 @@
 **/node_modules
 .nx/cache
 packages/twenty-server/.env
+
+# Heavy packages not needed in production build context
+packages/twenty-e2e-testing/
+packages/twenty-docs/
+packages/twenty-website/
+packages/twenty-website-new/
+
+# Test and story files
+**/*.test.ts
+**/*.spec.ts
+**/*.integration-spec.ts
+**/__tests__/
+**/__mocks__/
+.storybook/
+**/storybook-static/
+**/coverage/
+
+# Cache directories
+node_modules/.cache/
+.cache/
